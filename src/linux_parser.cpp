@@ -3,6 +3,7 @@
 #include <dirent.h>
 #include <unistd.h>
 
+#include <numeric>
 #include <string>
 #include <vector>
 
@@ -109,20 +110,37 @@ long LinuxParser::UpTime() {
 }
 
 // TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return 0; }
+long LinuxParser::TotalJiffies() {
+  vector<long> jiffies = Jiffies();
 
-// TODO: Read and return the number of active jiffies for a PID
-// REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid [[maybe_unused]]) { return 0; }
+  return std::accumulate(jiffies.cbegin(), jiffies.cend(), 0);
+}
 
 // TODO: Read and return the number of active jiffies for the system
-long LinuxParser::ActiveJiffies() { return 0; }
+long LinuxParser::ActiveJiffies() { return TotalJiffies() - IdleJiffies(); }
 
 // TODO: Read and return the number of idle jiffies for the system
-long LinuxParser::IdleJiffies() { return 0; }
+long LinuxParser::IdleJiffies() { return Jiffies()[CPUStates::kIdle_]; }
 
 // TODO: Read and return CPU utilization
-vector<string> LinuxParser::CpuUtilization() { return {}; }
+vector<long> LinuxParser::Jiffies() {
+  string line, label;
+  std::vector<long> jiffies;
+  long value;
+
+  std::ifstream stream(kProcDirectory + kStatFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    std::istringstream linestream(line);
+
+    linestream >> label;
+    while (linestream >> value) {
+      jiffies.push_back(value);
+    }
+  }
+
+  return jiffies;
+}
 
 // TODO: Read and return the total number of processes
 int LinuxParser::TotalProcesses() { return Pids().size(); }
@@ -130,6 +148,7 @@ int LinuxParser::TotalProcesses() { return Pids().size(); }
 // TODO: Read and return the number of running processes
 int LinuxParser::RunningProcesses() {
   string line, key, value;
+
   std::ifstream stream(kProcDirectory + kStatFilename);
   if (stream.is_open()) {
     while (std::getline(stream, line)) {
@@ -165,3 +184,7 @@ string LinuxParser::User(int pid [[maybe_unused]]) { return string(); }
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
 long LinuxParser::UpTime(int pid [[maybe_unused]]) { return 0; }
+
+// TODO: Read and return the number of active jiffies for a process
+// REMOVE: [[maybe_unused]] once you define the function
+long LinuxParser::ActiveJiffies(int pid [[maybe_unused]]) { return 0; }
