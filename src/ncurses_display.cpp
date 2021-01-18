@@ -31,6 +31,9 @@ std::string NCursesDisplay::ProgressBar(float percent) {
 }
 
 void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
+  wclear(window);
+  box(window, 0, 0);
+
   int row{0};
   mvwprintw(window, ++row, 2, ("OS: " + system.OperatingSystem()).c_str());
   mvwprintw(window, ++row, 2, ("Kernel: " + system.Kernel()).c_str());
@@ -98,7 +101,6 @@ void NCursesDisplay::Display(System& system, int n) {
   while (1) {
     init_pair(1, COLOR_BLUE, COLOR_BLACK);
     init_pair(2, COLOR_GREEN, COLOR_BLACK);
-    box(system_window, 0, 0);
     box(process_window, 0, 0);
     DisplaySystem(system, system_window);
     DisplayProcesses(system.Processes(), process_window, n);
