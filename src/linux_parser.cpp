@@ -22,8 +22,8 @@ string LinuxParser::OperatingSystem() {
       std::replace(line.begin(), line.end(), ' ', '_');
       std::replace(line.begin(), line.end(), '=', ' ');
       std::replace(line.begin(), line.end(), '"', ' ');
-      std::istringstream linestream(line);
-      while (linestream >> key >> value) {
+      std::istringstream lstream(line);
+      while (lstream >> key >> value) {
         if (key == "PRETTY_NAME") {
           std::replace(value.begin(), value.end(), '_', ' ');
           return value;
@@ -40,8 +40,8 @@ string LinuxParser::Kernel() {
   std::ifstream stream(kProcDirectory + kVersionFilename);
   if (stream.is_open()) {
     std::getline(stream, line);
-    std::istringstream linestream(line);
-    linestream >> os >> version >> kernel;
+    std::istringstream lstream(line);
+    lstream >> os >> version >> kernel;
   }
   return kernel;
 }
@@ -54,8 +54,8 @@ float LinuxParser::MemoryUtilization() {
 
   if (stream.is_open()) {
     while (std::getline(stream, line)) {
-      std::istringstream linestream(line);
-      linestream >> key >> value;
+      std::istringstream lstream(line);
+      lstream >> key >> value;
       if (key == "MemTotal:") {
         memTotal = value;
       }
@@ -99,8 +99,8 @@ long LinuxParser::UpTime() {
   std::ifstream stream(kProcDirectory + kUptimeFilename);
   if (stream.is_open()) {
     std::getline(stream, line);
-    std::istringstream linestream(line);
-    linestream >> uptime_seconds;
+    std::istringstream lstream(line);
+    lstream >> uptime_seconds;
   }
 
   return uptime_seconds;
@@ -122,16 +122,16 @@ long LinuxParser::IdleJiffies() { return Jiffies()[CPUStates::kIdle_]; }
 // TODO: Read and return CPU utilization
 vector<long> LinuxParser::Jiffies() {
   string line, label;
-  std::vector<long> jiffies;
+  vector<long> jiffies;
   long value;
 
   std::ifstream stream(kProcDirectory + kStatFilename);
   if (stream.is_open()) {
     std::getline(stream, line);
-    std::istringstream linestream(line);
+    std::istringstream lstream(line);
 
-    linestream >> label;
-    while (linestream >> value) {
+    lstream >> label;
+    while (lstream >> value) {
       jiffies.push_back(value);
     }
   }
