@@ -68,7 +68,7 @@ float LinuxParser::MemoryUtilization() {
     }
   }
 
-  return (memTotal - memAvailable) / memAvailable;
+  return (memTotal - memAvailable) / memTotal;
 }
 
 int LinuxParser::TotalProcesses() { return Pids().size(); }
