@@ -2,7 +2,6 @@
 
 #include "linux_parser.h"
 
-// TODO: Return the aggregate CPU utilization
 float Processor::Utilization() {
   curTotalJiffies = LinuxParser::TotalJiffies();
   curActiveJiffies = LinuxParser::ActiveJiffies();
