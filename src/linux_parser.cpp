@@ -197,7 +197,7 @@ string LinuxParser::Uid(int pid) {
       std::istringstream lstream(line);
       lstream >> label >> uid;
 
-      if (label == "Uid:") {
+      if (label == kUid_) {
         return uid;
       }
     }
@@ -219,7 +219,23 @@ string LinuxParser::Command(int pid) {
 
 // TODO: Read and return the memory used by a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Ram(int pid [[maybe_unused]]) { return string(); }
+int LinuxParser::RamKB(int pid) {
+  string line, label, value;
+  std::ifstream stream(kProcDirectory + to_string(pid) + kStatusFilename);
+
+  if (stream.is_open()) {
+    while (std::getline(stream, line)) {
+      std::istringstream lstream(line);
+      lstream >> label >> value;
+
+      if (label == kRam_) {
+        return std::stoi(value);
+      }
+    }
+  }
+
+  return 0;
+}
 
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function

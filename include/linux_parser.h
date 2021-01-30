@@ -46,14 +46,16 @@ long ActiveJiffies();
 long IdleJiffies();
 
 // Processes
-std::string Command(int pid);
-std::string Ram(int pid);
+enum StatFields { uTime = 13, sTime };
+const std::string kRam_ = "VmRSS:";
+const std::string kUid_ = "Uid:";
+
 std::string Uid(int pid);
 std::string User(int pid);
+std::string Command(int pid);
 
-enum StatFields { uTime = 13, sTime };
+int RamKB(int pid);
 long UpTime(int pid);
-
 long ActiveJiffies(int pid);
 };  // namespace LinuxParser
 

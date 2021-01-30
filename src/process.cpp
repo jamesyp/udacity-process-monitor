@@ -29,7 +29,7 @@ string Process::User() { return user_; }
 float Process::CpuUtilization() { return 0; }
 
 // TODO: Return this process's memory utilization
-string Process::Ram() { return string(); }
+int Process::RamMB() const { return LinuxParser::RamKB(pid_) / 1000; }
 
 // TODO: Return the age of this process (in seconds)
 long int Process::UpTime() { return uptime_; }
@@ -39,4 +39,4 @@ string Process::Command() { return command_; }
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator<(Process const& a) const { return uptime_ > a.uptime_; }
+bool Process::operator<(Process const& a) const { return RamMB() > a.RamMB(); }
