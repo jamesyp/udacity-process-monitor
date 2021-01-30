@@ -230,6 +230,28 @@ int LinuxParser::RamKB(int pid) {
 }
 
 long LinuxParser::UpTime(int pid) {
+  std::vector<string> values = StatFields(pid);
+  if (values.size() == 0) {
+    return 0;
+  }
+
+  long uTime = std::stol(values[StatFields::uTime]);
+  long sTime = std::stol(values[StatFields::sTime]);
+
+  long time = (uTime + sTime) / sysconf(_SC_CLK_TCK);
+  return time;
+}
+
+long LinuxParser::StartTime(int pid) {
+  std::vector<string> values = StatFields(pid);
+  if (values.size() == 0) {
+    return 0;
+  }
+
+  return std::stol(values[StatFields::startTime]) / sysconf(_SC_CLK_TCK);
+}
+
+std::vector<string> LinuxParser::StatFields(int pid) {
   string line;
   std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
   if (stream.is_open()) {
@@ -238,16 +260,7 @@ long LinuxParser::UpTime(int pid) {
     std::istringstream lstream(line);
     vector<string> result{std::istream_iterator<string>(lstream), {}};
 
-    long uTime = std::stol(result[StatFields::uTime]);
-    long sTime = std::stol(result[StatFields::sTime]);
-
-    long time = (uTime + sTime) / sysconf(_SC_CLK_TCK);
-    return time;
+    return result;
   }
-
-  return 0;
+  return vector<string>{};
 }
-
-// TODO: Read and return the number of active jiffies for a process
-// REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid [[maybe_unused]]) { return 0; }

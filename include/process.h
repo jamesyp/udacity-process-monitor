@@ -10,7 +10,7 @@ class Process {
   int Pid();
   std::string User();
   std::string Command();
-  float CpuUtilization();  // TODO: See src/process.cpp
+  float CpuUtilization() const;
   int RamMB() const;
   long int UpTime();
   bool operator<(Process const& a) const;
@@ -18,7 +18,8 @@ class Process {
  private:
   int pid_;
   std::string user_;
-  long uptime_;
+  long upTime_;
+  long totalTime_;
   std::string command_;
 };
 
