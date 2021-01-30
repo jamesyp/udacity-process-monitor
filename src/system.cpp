@@ -27,7 +27,7 @@ vector<Process>& System::Processes() {
   return processes_;
 }
 
-std::string System::Kernel() {
+string System::Kernel() {
   if (kernel == "") {
     kernel = LinuxParser::Kernel();
   }
@@ -37,7 +37,7 @@ std::string System::Kernel() {
 
 float System::MemoryUtilization() { return LinuxParser::MemoryUtilization(); }
 
-std::string System::OperatingSystem() {
+string System::OperatingSystem() {
   if (os == "") {
     os = LinuxParser::OperatingSystem();
   }

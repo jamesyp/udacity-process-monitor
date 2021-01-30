@@ -230,7 +230,7 @@ int LinuxParser::RamKB(int pid) {
 }
 
 long LinuxParser::UpTime(int pid) {
-  std::vector<string> values = StatFields(pid);
+  vector<string> values = StatFields(pid);
   if (values.size() == 0) {
     return 0;
   }
@@ -243,7 +243,7 @@ long LinuxParser::UpTime(int pid) {
 }
 
 long LinuxParser::StartTime(int pid) {
-  std::vector<string> values = StatFields(pid);
+  vector<string> values = StatFields(pid);
   if (values.size() == 0) {
     return 0;
   }
@@ -251,7 +251,7 @@ long LinuxParser::StartTime(int pid) {
   return std::stol(values[StatFields::startTime]) / sysconf(_SC_CLK_TCK);
 }
 
-std::vector<string> LinuxParser::StatFields(int pid) {
+vector<string> LinuxParser::StatFields(int pid) {
   string line;
   std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
   if (stream.is_open()) {

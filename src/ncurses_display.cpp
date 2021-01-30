@@ -15,8 +15,8 @@ using std::to_string;
 
 // 50 bars uniformly displayed from 0 - 100 %
 // 2% is one bar(|)
-std::string NCursesDisplay::ProgressBar(float percent) {
-  std::string result{"0%"};
+string NCursesDisplay::ProgressBar(float percent) {
+  string result{"0%"};
   int size{50};
   float bars{percent * size};
 
@@ -95,7 +95,7 @@ void NCursesDisplay::Display(System& system, int n) {
   noecho();       // do not print input values
   cbreak();       // terminate ncurses on ctrl + c
   start_color();  // enable color
-  curs_set(0);
+  curs_set(0);    // hide the cursor
 
   int x_max{getmaxx(stdscr)};
   WINDOW* system_window = newwin(9, x_max - 1, 0, 0);
